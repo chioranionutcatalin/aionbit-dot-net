@@ -60,7 +60,7 @@ This repository includes a workflow at `.github/workflows/deploy-vm.yml` for dep
 - `VM_SSH_KEY` - private key (PEM content)
 - `VM_PORT` - optional, defaults to `22`
 - `VM_APP_DIR` - optional, defaults to `/home/<VM_USER>/aionbit-dot-net`
-- `FORMSPREE_FORM_ID` - only the form id (example: `xpqyzklb`)
+- `FORMSPREE_FORM_ID` - only the form id
 - `SITE_PORT` - optional, defaults to `8081`
 
 ### Important for GCP networking
