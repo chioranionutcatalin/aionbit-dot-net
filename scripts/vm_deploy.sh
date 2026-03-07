@@ -40,12 +40,18 @@ if [ ! -f ".env.runtime" ]; then
   exit 1
 fi
 
+
 if [ ! -f "docker-compose.yml" ]; then
   echo "docker-compose.yml not found in ${APP_DIR}." >&2
   exit 1
 fi
 
-"${DOCKER_CMD[@]}" compose up -d --build --remove-orphans
+# Compatibilitate maximă: fallback docker compose/docker-compose
+if command -v docker-compose >/dev/null 2>&1; then
+  docker-compose up -d --build --remove-orphans
+else
+  "${DOCKER_CMD[@]}" compose up -d --build --remove-orphans
+fi
 
 for attempt in $(seq 1 "${ATTEMPTS}"); do
   status_code="$(curl -s -o /dev/null -w "%{http_code}" "${HEALTH_URL}" || true)"
