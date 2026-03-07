@@ -17,6 +17,7 @@ export default function Cta() {
     "idle",
   );
 
+  
   return (
     <section id="contact" className="relative overflow-hidden">
       <div
