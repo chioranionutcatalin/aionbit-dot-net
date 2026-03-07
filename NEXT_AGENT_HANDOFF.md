@@ -106,7 +106,7 @@ Current state:
 - Switched to user-provided v2 dark background logo and tuned sizing to avoid padding/cropping.
 
 Current state:
-- `components/ui/logo.tsx` uses `@/public/images/Aionbit-logo/default.png`
+- `components/ui/logo.tsx` uses `@/public/images/Aionbit-logo/vector/default-monochrome-white.svg`
 
 ## Task-10: Projects Card Height Equalization (Done)
 - Ensured project cards render with equal heights regardless of image size or title length.

@@ -47,11 +47,11 @@ export default function Header() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="relative overflow-hidden rounded-2xl border border-gray-700/70 bg-gray-900 p-3">
           <div className="relative z-10 grid grid-cols-12 gap-x-2 gap-y-2 md:hidden">
-            <div className="col-span-2 flex items-start">
+            <div className="col-span-3 flex items-start">
               <Logo />
             </div>
 
-            <div className="col-span-10 grid grid-rows-2 gap-y-2">
+            <div className="col-span-9 grid grid-rows-2 gap-y-2">
               <ul className="grid grid-cols-4 items-center gap-1 text-center text-[11px]">
                 <li>
                   <Link

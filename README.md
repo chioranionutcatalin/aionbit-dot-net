@@ -46,6 +46,38 @@ npm run lint
 - If deploying fully static, validate Next.js static export/image behavior before release.
 - Current auth pages are template-only and not wired to backend auth.
 
+## GCP VM Deployment (GitHub Actions)
+This repository includes a workflow at `.github/workflows/deploy-vm.yml` for deploying to a Google Cloud VM over SSH.
+
+### What it does
+- Builds static output (`next.config.js` uses `output: "export"`)
+- Uploads `out/` + Docker/Nginx files to `/opt/aionbit-dot-net` on VM
+- Runs `docker compose up -d --build --remove-orphans`
+
+### Required GitHub Secrets
+- `VM_HOST` - VM public IP or DNS
+- `VM_USER` - SSH username
+- `VM_SSH_KEY` - private key (PEM content)
+- `VM_PORT` - optional, defaults to `22`
+- `VM_APP_DIR` - optional, defaults to `/home/<VM_USER>/aionbit-dot-net`
+- `FORMSPREE_FORM_ID` - only the form id (example: `xpqyzklb`)
+- `SITE_PORT` - optional, defaults to `8081`
+
+### Important for GCP networking
+- Current VM IP is ephemeral in your notes. Reserve a static external IP in GCP and attach it to the VM, otherwise DNS and deploy target can break after stop/start.
+
+### Why Formspree is hidden
+- Frontend submits to `/form-submit` (same domain)
+- Nginx proxies `/form-submit` to `https://formspree.io/f/${FORMSPREE_FORM_ID}`
+- Formspree endpoint does not appear in tracked frontend source
+
+## Domain + HTTPS Checklist
+1. DNS: create `A` record for `aitonbit.net` to VM IP.
+2. DNS: create `CNAME` for `www` -> `aitonbit.net`.
+3. Open firewall ports `80` and `443` on VM/security group.
+4. Issue TLS cert (Let's Encrypt) using Certbot or Nginx Proxy Manager.
+5. Route HTTPS traffic to this container (directly or through reverse proxy).
+
 ## Repository Notes
 - Parking area for deferred work: `not_used/`, `utils_not_used/`
 - Extended project context for future agents: `NEXT_AGENT_HANDOFF.md`

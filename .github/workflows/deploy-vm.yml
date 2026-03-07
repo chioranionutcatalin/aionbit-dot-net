@@ -1,0 +1,79 @@
+name: Deploy to GCP VM
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH connectivity check
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: ${{ secrets.VM_PORT || '22' }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            echo "Connected to VM"
+            whoami
+            hostname
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build static site
+        run: pnpm build
+
+      - name: Prepare runtime env file
+        run: |
+          cat > .env.runtime <<EOF
+          FORMSPREE_FORM_ID=${{ secrets.FORMSPREE_FORM_ID }}
+          SITE_PORT=${{ secrets.SITE_PORT || '8081' }}
+          EOF
+
+      - name: Upload artifacts to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: ${{ secrets.VM_PORT || '22' }}
+          source: "Dockerfile,docker-compose.yml,nginx/default.conf.template,out,.env.runtime,scripts/vm_deploy.sh"
+          target: "${{ secrets.VM_APP_DIR || format('/home/{0}/aionbit-dot-net', secrets.VM_USER) }}"
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: ${{ secrets.VM_PORT || '22' }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            APP_DIR="${{ secrets.VM_APP_DIR || format('/home/{0}/aionbit-dot-net', secrets.VM_USER) }}"
+            mkdir -p "$APP_DIR"
+            cd "$APP_DIR"
+            chmod +x scripts/vm_deploy.sh
+            sed -i 's/\r$//' scripts/vm_deploy.sh
+            APP_DIR="$APP_DIR" SITE_PORT="${{ secrets.SITE_PORT || '8081' }}" bash -x scripts/vm_deploy.sh

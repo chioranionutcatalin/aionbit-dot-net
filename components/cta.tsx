@@ -49,7 +49,7 @@ export default function Cta() {
             </p>
             <form
               id="my-form"
-              action="https://formspree.io/f/xpqyzklb"
+              action="/form-submit"
               method="POST"
               className="mx-auto grid max-w-2xl gap-4 text-left"
               data-aos="fade-up"
