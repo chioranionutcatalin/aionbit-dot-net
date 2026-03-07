@@ -9,9 +9,15 @@ This document summarizes major work completed, project direction, and pending co
 - Deployment target: likely static hosting (Nginx in Docker, low-resource VM 1gb on gooogle cloud vm/micro).
 
 ## Environment Notes
-- Repo root: `c:/dev/open-react-template`
+- Repo root: `c:/dev/aionbit-dot-net`
 - Current OS: Windows
 - There are multiple projects in `c:/dev`; do not search globally unless needed.
+
+## Git History Note
+- `main` history was squashed into a single commit after migration to personal repository.
+- Current root commit on `main`: `58d2a72` (`Initial commit - Aionbit`).
+- Previous pre-squash history is kept only in a local backup branch (not pushed): `backup/main-before-squash-20260307-122009`.
+- Operational chronology in this document remains valid as project context.
 
 ## Task-1: Rebrand Core Content (Done)
 - Replaced template product copy with agency/outsourcing copy.
@@ -100,7 +106,7 @@ Current state:
 - Switched to user-provided v2 dark background logo and tuned sizing to avoid padding/cropping.
 
 Current state:
-- `components/ui/logo.tsx` uses `@/public/images/logov2darkbg.png`
+- `components/ui/logo.tsx` uses `@/public/images/Aionbit-logo/default.png`
 
 ## Task-10: Projects Card Height Equalization (Done)
 - Ensured project cards render with equal heights regardless of image size or title length.
@@ -201,7 +207,7 @@ Key file:
 - If copy is changed in EN, update IT/ES/FR in same commit to avoid fallback mix.
 
 ## Known Technical Gotchas
-- This workspace contains many sibling projects under `c:/dev`; always scope searches to `open-react-template`.
+- This workspace contains many sibling projects under `c:/dev`; always scope searches to `aionbit-dot-net`.
 - Alias imports (`@/...`) sometimes showed editor-only resolution warnings in this environment.
 - For touched files, relative imports were used in a few places to avoid transient alias diagnostics.
 - `next lint` may prompt for ESLint setup and try `pnpm`; environment did not have `pnpm`.
