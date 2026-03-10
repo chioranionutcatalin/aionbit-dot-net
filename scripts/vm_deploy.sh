@@ -23,46 +23,44 @@ if ! docker ps >/dev/null 2>&1; then
     DOCKER_CMD=(sudo docker)
   else
     echo "docker requires elevated privileges for this user." >&2
-    echo "Run once on VM: sudo usermod -aG docker $USER, then logout/login." >&2
     exit 1
   fi
 fi
 
 cd "${APP_DIR}"
 
-if [ ! -d "out" ]; then
-  echo "out/ not found in ${APP_DIR}. Upload step likely failed." >&2
-  exit 1
+# Curățăm containerele vechi care pot cauza KeyError: 'ContainerConfig'
+echo "Cleaning up old containers..."
+if docker compose version >/dev/null 2>&1; then
+    docker compose down || true
+elif command -v docker-compose >/dev/null 2>&1; then
+    docker-compose down || true
 fi
 
-if [ ! -f ".env.runtime" ]; then
-  echo ".env.runtime not found in ${APP_DIR}. Secret injection likely failed." >&2
-  exit 1
-fi
-
-
-if [ ! -f "docker-compose.yml" ]; then
-  echo "docker-compose.yml not found in ${APP_DIR}." >&2
-  exit 1
-fi
-
-# Compatibilitate maximă: fallback docker compose/docker-compose
-if command -v docker-compose >/dev/null 2>&1; then
+# Pornim noul build
+echo "Starting deployment..."
+if docker compose version >/dev/null 2>&1; then
+  docker compose up -d --build --remove-orphans
+elif command -v docker-compose >/dev/null 2>&1; then
   docker-compose up -d --build --remove-orphans
 else
-  "${DOCKER_CMD[@]}" compose up -d --build --remove-orphans
+  echo "Nicio versiune de docker compose nu a fost gasita!" >&2
+  exit 1
 fi
 
+# Health Check Loop (Verificăm dacă site-ul chiar a pornit)
+echo "Running health check on ${HEALTH_URL}..."
 for attempt in $(seq 1 "${ATTEMPTS}"); do
   status_code="$(curl -s -o /dev/null -w "%{http_code}" "${HEALTH_URL}" || true)"
   if [ "${status_code}" = "200" ]; then
-    echo "Health check passed on attempt ${attempt}: ${HEALTH_URL}"
-    echo "Deploy complete. ${CONTAINER_NAME} serves static out/ on port ${SITE_PORT}."
+    echo "Health check passed on attempt ${attempt}!"
+    echo "Deploy complete: aitonbit.net is live on port ${SITE_PORT}."
     exit 0
   fi
-  sleep 1
+  echo "Attempt ${attempt}: Site not ready yet (Status: ${status_code}). Waiting..."
+  sleep 2
 done
 
-echo "Health check failed for ${HEALTH_URL}. Last container logs:" >&2
+echo "Health check failed! Last container logs:" >&2
 "${DOCKER_CMD[@]}" logs --tail 80 "${CONTAINER_NAME}" >&2 || true
 exit 1
