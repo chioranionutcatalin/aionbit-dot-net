@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Aionbit | Web Outsourcing Agency",
+  title: "Aionbit | Digital Transformation and Scalable Solutions",
   description:
     "Aionbit helps companies scale products with senior frontend delivery, full-stack development, QA automation, and technical leadership.",
 };
