@@ -40,7 +40,7 @@ const nacelle = localFont({
 });
 
 export const metadata = {
-  title: "Aiton | Freelancing and Outsourcing Agency",
+  title: "Aionbit | Freelancing and Outsourcing Agency",
   description:
     "We build modern websites, web apps, and scalable digital products through flexible outsourcing partnerships.",
 };

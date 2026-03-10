@@ -58,7 +58,7 @@ export default function HeroHome() {
             thumb={VideoThumb}
             thumbWidth={1104}
             thumbHeight={576}
-            thumbAlt="Aiton delivery showcase"
+            thumbAlt="Aionbit delivery showcase"
             video="videos//video.mp4"
             videoWidth={1920}
             videoHeight={1080}

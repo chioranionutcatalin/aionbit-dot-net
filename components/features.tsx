@@ -35,7 +35,7 @@ export default function Features() {
         </svg>
       ),
     },
-    {
+    {879
       key: "fullstack",
       title: t("skill2Title"),
       description: t("skill2Description"),

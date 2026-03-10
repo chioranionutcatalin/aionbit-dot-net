@@ -72,8 +72,8 @@ This repository includes a workflow at `.github/workflows/deploy-vm.yml` for dep
 - Formspree endpoint does not appear in tracked frontend source
 
 ## Domain + HTTPS Checklist
-1. DNS: create `A` record for `aitonbit.net` to VM IP.
-2. DNS: create `CNAME` for `www` -> `aitonbit.net`.
+1. DNS: create `A` record for `aionbit.net` to VM IP.
+2. DNS: create `CNAME` for `www` -> `aionbit.net`.
 3. Open firewall ports `80` and `443` on VM/security group.
 4. Issue TLS cert (Let's Encrypt) using Certbot or Nginx Proxy Manager.
 5. Route HTTPS traffic to this container (directly or through reverse proxy).
