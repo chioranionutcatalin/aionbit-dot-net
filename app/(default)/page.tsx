@@ -1,7 +1,7 @@
 export const metadata = {
-  title: "Aitonbit | Web Outsourcing Agency",
+  title: "Aionbit | Web Outsourcing Agency",
   description:
-    "Aitonbit helps companies scale products with senior frontend delivery, full-stack development, QA automation, and technical leadership.",
+    "Aionbit helps companies scale products with senior frontend delivery, full-stack development, QA automation, and technical leadership.",
 };
 
 import PageIllustration from "@/components/page-illustration";
